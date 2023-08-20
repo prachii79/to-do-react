@@ -1,186 +1,59 @@
 import React, { ChangeEvent, useState } from "react";
 import { nanoid } from "nanoid";
-import Task from "./components/Task";
-import {TaskInt} from "./interfaces";
 import { ModalTask } from "./interfaces";
-import Create from "./components/Create";
 import CreateModal from "./components/CreateModal";
+import EditModal from "./components/EditModal";
 import NewTask from "./components/NewTask";
 import {
-  Accordion,
-  AccordionItem,
-  AccordionItemHeading,
-  AccordionItemButton,
-  AccordionItemPanel,
+  Accordion
 } from 'react-accessible-accordion';
 
 export default function App() {
 
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  function openModal() { setIsOpen(true) }
+  function closeModal() { setIsOpen(false) }
 
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
+  const [editModalIsOpen, setEditIsOpen] = React.useState(false);
+  function openEditModal() { setEditIsOpen(true) }
+  function closeEditModal() { setEditIsOpen(false) }
 
   const [label, setLabel] = useState("");
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
-  const [value, setValue] = useState("");
-  // const [tasks, setTasks] = useState(() => {
-  //   const storedTask = JSON.parse(localStorage.getItem("data"));
-  //   return storedTask || [];
-  // });
-  const [tasks, setTasks] = useState([]);
-  const [showAll, setShowAll] = useState(true);
-  const [showImp, setShowImp] = useState(false);
-  const [showCompleted, setShowCompleted] = useState(false);
-  const [showActive, setShowActive] = useState(false);
+  const [tasks, setTasks] = useState(() => {
+    const storedTask = JSON.parse(localStorage.getItem("data"));
+    return storedTask || [];
+  });
+
+  
+  const [editLabel, setEditLabel] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  const [editDetails, setEditDetails] = useState("");
 
   React.useEffect(() => {
     localStorage.setItem("data", JSON.stringify(tasks));
   }, [tasks]);
 
-  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-    setValue(e.target.value);
-  }
-
   function handleLabel(e: ChangeEvent<HTMLInputElement>) {
     setLabel(e.target.value);
   }
-
   function handleTitle(e: ChangeEvent<HTMLInputElement>) {
     setTitle(e.target.value);
   }
-
   function handleDetail(e: ChangeEvent<HTMLInputElement>) {
     setDetails(e.target.value);
   }
 
-  // function handleCreate() {
-  //   setTasks((prevTasks) => {
-  //     const task: TaskInt = {
-  //       id: nanoid(),
-  //       val: value,
-  //       isDone: false,
-  //       isDeleted: false,
-  //       isImp: false,
-  //     };
-  //     return [...prevTasks, task];
-  //   });
-  //   setValue("");
-  // }
-
-  // function toggle(id: string) {
-  //   setTasks((prevTasks) => {
-  //     return prevTasks.map((currentTask) => {
-  //       if (currentTask.id === id) {
-  //         return {
-  //           ...currentTask,
-  //           isDone: !currentTask.isDone,
-  //         };
-  //       }
-  //       return currentTask;
-  //     });
-  //   });
-  // }
-
-  // function deleteTask(id: string) {
-  //   setTasks((prevTasks) => {
-  //     return prevTasks.filter((task) => task.id != id);
-  //   });
-  //   localStorage.setItem("data", JSON.stringify(tasks));
-  // }
-
-  // function markImp(id: string) {
-  //   setTasks((prevTasks) => {
-  //     const newTasks: TaskInt[] = [];
-  //     for (let i = 0; i < prevTasks.length; i++) {
-  //       const currentTask = prevTasks[i];
-  //       if (currentTask.id === id) {
-  //         const updatedTask = {
-  //           ...currentTask,
-  //           isImp: !currentTask.isImp,
-  //         };
-  //         newTasks.push(updatedTask);
-  //       } else {
-  //         newTasks.push(currentTask);
-  //       }
-  //     }
-  //     return newTasks;
-  //   });
-  // }
-
-  // const allTasks = tasks.map((taask: TaskInt) => {
-  //   return (
-  //     <Task
-  //     key = {taask.id}
-  //       toggle={toggle}
-  //       markImp={markImp}
-  //       deleteTask={deleteTask}
-  //       val={taask.val}
-  //       id={taask.id}
-  //       done={taask.isDone}
-  //       imp={taask.isImp}
-  //     />
-  //   );
-  // });
-
-  // const filteredTasks = tasks.filter((taask: TaskInt) => {
-  //   if ((showImp && !taask.isImp) || (showCompleted && !taask.isDone) || (showActive && taask.isDone)) {
-  //     return false;
-  //   }
-  //   return true;
-  // }).map((taask: TaskInt)=> (
-  //   <Task
-  //     key = {taask.id}
-  //     toggle={toggle}
-  //     markImp={markImp}
-  //     deleteTask={deleteTask}
-  //     val={taask.val}
-  //     id={taask.id}
-  //     done={taask.isDone}
-  //     imp={taask.isImp}
-  //   />
-  // ));
-
-  // function bgcolor(param: boolean){
-  //   const styles = {
-  //     backgroundColor : param ?  "purple" : "white"
-  //   }
-  //   return styles
-  // }
-
-  // React.useEffect(()=>{
-  //   if(showImp || showActive || showCompleted){
-  //     setShowAll(false)
-  //     if(showActive && showCompleted){
-  //       setShowActive(false)
-  //       setShowCompleted(false)
-  //       alert("active and completed tasks are merged in all tasks")
-  //     }
-  //   } 
-  //   else if(showAll){
-  //     setShowImp(false)
-  //     setShowActive(false)
-  //     setShowCompleted(false)
-  //   }
-  //   else{
-  //     setShowAll(true)
-  //     setShowImp(false)
-  //     setShowActive(false)
-  //     setShowCompleted(false)}
-  // }, [showImp, showActive, showCompleted, showAll])
-    
-  // function handleShowAllClick() {
-  //   setShowAll(true);
-  //   setShowImp(false);
-  //   setShowActive(false);
-  //   setShowCompleted(false);
-  // }
+  function handleEditLabel(e: ChangeEvent<HTMLInputElement>) {
+    setEditLabel(e.target.value);
+  }
+  function handleEditTitle(e: ChangeEvent<HTMLInputElement>) {
+    setEditTitle(e.target.value);
+  }
+  function handleEditDetail(e: ChangeEvent<HTMLInputElement>) {
+    setEditDetails(e.target.value);
+  }
 
   function handleCreateTasks() {
     setTasks((prevTasks) => {
@@ -203,16 +76,102 @@ export default function App() {
     }
   }
 
+  function deleteTask(id: string, e) {
+    e.stopPropagation()
+    setTasks((prevTasks) => {
+      return prevTasks.filter((task) => task.id != id);
+    });
+    localStorage.setItem("data", JSON.stringify(tasks));
+  }
+
+  // function handleEdit(id: string){
+  //   const idToRemove = id;    
+  //   const indexToRemove = tasks.findIndex(taask => taask.id === idToRemove);
+    
+
+  //   setTasks(prevTasks => {
+  //     const editedTask = {
+  //       id: id,
+  //       label: editLabel,
+  //       title: editTitle,
+  //       details: editDetails,
+  //     }
+  //     return(prevTasks.splice(indexToRemove, 1, editedTask))
+  //   })
+
+  //   setEditLabel("");
+  //   setEditTitle("");
+  //   setEditDetails("");
+  //   closeEditModal();
+  // } 
+
+  function handleEdit(id: string) {
+    const indexToEdit = tasks.findIndex(task => task.id === id);
+    const editedTask = {
+      id: id,
+      label: editLabel,
+      title: editTitle,
+      details: editDetails,
+    };
+    
+    const updatedTasks = [...tasks];
+    updatedTasks.splice(indexToEdit, 1, editedTask);
+    
+    setTasks(updatedTasks);
+
+    setEditLabel("");
+    setEditTitle("");
+    setEditDetails("");
+    closeEditModal();
+  }  
+
+  function editTask(id: string, e){
+    e.stopPropagation()
+    setEditIsOpen(true)
+    // openEditModal()
+    const editable = tasks.find(taask => taask.id === id)
+
+    var idToEdit = editable.id
+
+    if (editable) {
+      setEditLabel(editable.label);
+      setEditTitle(editable.title);
+      setEditDetails(editable.details);
+    }  
+    console.log("edit")
+  }
+
+  const taskToEdit = tasks.find(task => task.title === editTitle)
+
+  {editModalIsOpen && 
+    <EditModal 
+    open={editModalIsOpen}
+    setOpen={setEditIsOpen}
+    onOpen={openEditModal}
+    onClose={closeEditModal}
+    label={editLabel}
+    onLabel={handleEditLabel}
+    title={editTitle}
+    onTitle={handleEditTitle}
+    details={editDetails}
+    onDetail={handleEditDetail}
+    onEditTask={() => handleEdit(taskToEdit.id)}
+/>}
+
   const modalTasks = tasks.map((taask: ModalTask) => {
     return(
       <NewTask 
         key = {taask.id}
+        id = {taask.id}
         labl={taask.label}
         tit={taask.title}
         det={taask.details}
+        delet={deleteTask}
+        edit={editTask}
       />
     )
   })  
+
 
   return (
     <div className="w-5/12 border-2 rounded-md flex flex-col items-center justify-center mx-auto p-3">
@@ -231,37 +190,21 @@ export default function App() {
         </div>
       </header>
 
-      {/* <Create
-        onCreate={handleCreate}
-        inVal={value}
-        handleInput={handleInputChange}
-      /> */}
-
-      {/* <button style={bgcolor(showAll)} onClick={handleShowAllClick}>show all</button>
-      <button style={bgcolor(showImp)} onClick={() => setShowImp(prevState => !prevState)}>show imp</button>
-      <button style={bgcolor(showCompleted)} onClick={() => setShowCompleted(prevState => !prevState)}>show completed</button>
-      <button style={bgcolor(showActive)} onClick={() => setShowActive(prevState => !prevState)}>show active</button> */}
-
-      {/* <div id="show"  className="mt-10">
-        {(filteredTasks.length > 0 && (showImp || showActive || showCompleted) ) ? filteredTasks : allTasks}
-      </div> */}
-
-
       <CreateModal 
         open={modalIsOpen}
         setOpen={setIsOpen}
         onOpen={openModal}
         onClose={closeModal}
-        label={label}
+        label={editLabel}
         onLabel={handleLabel}
-        title={title}
+        title={editTitle}
         onTitle={handleTitle}
-        details={details}
+        details={editDetails}
         onDetail={handleDetail}
         onCreateTasks={handleCreateTasks}
       />
            
-      <Accordion id="weird" allowZeroExpanded>
+      <Accordion allowZeroExpanded>
         {modalTasks}
         </Accordion>
 
