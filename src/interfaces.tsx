@@ -8,7 +8,10 @@ export interface TaskInt {
 
 export interface ModalTask {
   id: string,
-  label: string,
+  date: string,
+  prior: string,
   title: string,
-  details: string
+  details: string,
+  done: boolean,
+  //handleDone: (e: any, id: string) => void,
 }

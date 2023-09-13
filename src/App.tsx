@@ -1,12 +1,10 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import { nanoid } from "nanoid";
 import { ModalTask } from "./interfaces";
 import CreateModal from "./components/CreateModal";
 import EditModal from "./components/EditModal";
 import NewTask from "./components/NewTask";
-import {
-  Accordion
-} from 'react-accessible-accordion';
+import { Accordion } from 'react-accessible-accordion';
 
 export default function App() {
 
@@ -18,16 +16,17 @@ export default function App() {
   function openEditModal() { setEditIsOpen(true) }
   function closeEditModal() { setEditIsOpen(false) }
 
-  const [label, setLabel] = useState("");
+  const [date, setDate] = useState("");
+  const [prior, setPrior] = useState("");
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
+  //const [done, setDone] = useState(false)
   const [tasks, setTasks] = useState(() => {
     const storedTask = JSON.parse(localStorage.getItem("data"));
     return storedTask || [];
   });
-
   
-  const [editLabel, setEditLabel] = useState("");
+  const [editPrior, setEditPrior] = useState("");
   const [editTitle, setEditTitle] = useState("");
   const [editDetails, setEditDetails] = useState("");
 
@@ -35,41 +34,34 @@ export default function App() {
     localStorage.setItem("data", JSON.stringify(tasks));
   }, [tasks]);
 
-  function handleLabel(e: ChangeEvent<HTMLInputElement>) {
-    setLabel(e.target.value);
+  function handleDone(id: string) {
+    console.log("clicked")
+    setTasks((prevTasks: ModalTask[]) => {
+      return prevTasks.map((task) =>
+        task.id === id ? { ...task, done: !task.done } : task
+      );
+    });
   }
-  function handleTitle(e: ChangeEvent<HTMLInputElement>) {
-    setTitle(e.target.value);
-  }
-  function handleDetail(e: ChangeEvent<HTMLInputElement>) {
-    setDetails(e.target.value);
-  }
-
-  function handleEditLabel(e: ChangeEvent<HTMLInputElement>) {
-    setEditLabel(e.target.value);
-  }
-  function handleEditTitle(e: ChangeEvent<HTMLInputElement>) {
-    setEditTitle(e.target.value);
-  }
-  function handleEditDetail(e: ChangeEvent<HTMLInputElement>) {
-    setEditDetails(e.target.value);
-  }
+  
+  //const checked = done ? "/images/checked2.svg" : "/images/unchecked.svg"
 
   function handleCreateTasks() {
-    setTasks((prevTasks) => {
+    setTasks((prevTasks: ModalTask[]) => {
       const task: ModalTask = {
         id: nanoid(),
-        label: label,
+        date: date,
+        prior: prior,
         title:title,
         details:details,
+        done:false
       };
       return [...prevTasks, task];
     });
-    setLabel("");
+    setPrior("");
     setTitle("");
     setDetails("");
 
-    if((label || title || details) === null ){
+    if((prior || title || details) === null ){
       alert("fill the necessary fields")
     } else{
       closeModal();
@@ -78,48 +70,19 @@ export default function App() {
 
   function deleteTask(id: string, e) {
     e.stopPropagation()
-    setTasks((prevTasks) => {
+    setTasks((prevTasks: ModalTask[]) => {
       return prevTasks.filter((task) => task.id != id);
     });
     localStorage.setItem("data", JSON.stringify(tasks));
   }
 
-  // function handleEdit(id: string){
-  //   const idToRemove = id;    
-  //   const indexToRemove = tasks.findIndex(taask => taask.id === idToRemove);
-    
-
-  //   setTasks(prevTasks => {
-  //     const editedTask = {
-  //       id: id,
-  //       label: editLabel,
-  //       title: editTitle,
-  //       details: editDetails,
-  //     }
-  //     return(prevTasks.splice(indexToRemove, 1, editedTask))
-  //   })
-
-  //   setEditLabel("");
-  //   setEditTitle("");
-  //   setEditDetails("");
-  //   closeEditModal();
-  // } 
-
   function handleEdit(id: string) {
-    const indexToEdit = tasks.findIndex(task => task.id === id);
-    const editedTask = {
-      id: id,
-      label: editLabel,
-      title: editTitle,
-      details: editDetails,
-    };
-    
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(indexToEdit, 1, editedTask);
-    
-    setTasks(updatedTasks);
-
-    setEditLabel("");
+    setTasks((prevTasks: ModalTask[]) => {
+      return prevTasks.map((task) =>
+        task.id === id ? { ...task, prior: editPrior, title: editTitle, details: editDetails } : task
+      );
+    });
+    setEditPrior("");
     setEditTitle("");
     setEditDetails("");
     closeEditModal();
@@ -128,59 +91,51 @@ export default function App() {
   function editTask(id: string, e){
     e.stopPropagation()
     setEditIsOpen(true)
-    // openEditModal()
-    const editable = tasks.find(taask => taask.id === id)
-
-    var idToEdit = editable.id
+    const editable = tasks.find((taask: ModalTask) => taask.id === id)
 
     if (editable) {
-      setEditLabel(editable.label);
+      setEditPrior(editable.prior);
       setEditTitle(editable.title);
       setEditDetails(editable.details);
     }  
-    console.log("edit")
   }
 
-  const taskToEdit = tasks.find(task => task.title === editTitle)
-
-  {editModalIsOpen && 
-    <EditModal 
-    open={editModalIsOpen}
-    setOpen={setEditIsOpen}
-    onOpen={openEditModal}
-    onClose={closeEditModal}
-    label={editLabel}
-    onLabel={handleEditLabel}
-    title={editTitle}
-    onTitle={handleEditTitle}
-    details={editDetails}
-    onDetail={handleEditDetail}
-    onEditTask={() => handleEdit(taskToEdit.id)}
-/>}
+  const taskToEdit = tasks.find((task: ModalTask) => task.title === editTitle)
 
   const modalTasks = tasks.map((taask: ModalTask) => {
     return(
       <NewTask 
         key = {taask.id}
         id = {taask.id}
-        labl={taask.label}
+        priority={taask.prior}
         tit={taask.title}
         det={taask.details}
         delet={deleteTask}
         edit={editTask}
+        date={taask.date}
+        done={taask.done}
+        handle={handleDone}
       />
     )
   })  
 
-
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  let yyyy = today.getFullYear();
+  let d = today.getDay()
+  const months = ["January", "February", "March", "April","May", "June", "July", "August", "September", "October", "November", "December"]
+  const month = months[parseInt(mm) - 1]
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+  const day = days[parseInt(d) - 1]
   return (
     <div className="w-5/12 border-2 rounded-md flex flex-col items-center justify-center mx-auto p-3">
       <header className="flex justify-between w-full h-22 border-b-2 border-dotted pb-2">
         <div className="flex items-center">
-          <div className="text-4xl font-bold">25</div>
-          <div className="ml-2 text-sm">
-            <p>Tuesday</p>
-            <p>Dec 2018</p>
+          <div className="text-4xl font-bold">{dd}</div>
+          <div className="ml-2">
+            <p className="text-md font-semibold">{month} {yyyy}</p>
+            <p className="text-sm">{day}</p>
           </div>
         </div>
 
@@ -195,19 +150,35 @@ export default function App() {
         setOpen={setIsOpen}
         onOpen={openModal}
         onClose={closeModal}
-        label={editLabel}
-        onLabel={handleLabel}
-        title={editTitle}
-        onTitle={handleTitle}
-        details={editDetails}
-        onDetail={handleDetail}
+        prior={prior}
+        onPrior={e=>{setPrior(e.target.value)}}
+        title={title}
+        details={details}
+        onTitle={e=>{setTitle(e.target.value)}}
+        onDetail={e => {setDetails(e.target.value)}}
+        onDate={e => {setDate(e.target.value)}}
         onCreateTasks={handleCreateTasks}
       />
+
+      {editModalIsOpen && 
+          <EditModal 
+          open={editModalIsOpen}
+          setOpen={setEditIsOpen}
+          onOpen={openEditModal}
+          onClose={closeEditModal}
+          prior={editPrior}
+          onPrior={e => {setEditPrior(e.target.value)}}
+          title={editTitle}
+          details={editDetails}
+          onTitle={e => {setEditTitle(e.target.value)}}
+          onDetail={e => {setEditDetails(e.target.value)}}
+          onEditTask={() => handleEdit(taskToEdit.id)}
+      />}
            
       <Accordion allowZeroExpanded>
         {modalTasks}
-        </Accordion>
+      </Accordion>
 
-      </div>
+    </div>
   );
 }

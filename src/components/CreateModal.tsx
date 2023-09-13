@@ -1,4 +1,3 @@
-import React from "react"
 import Modal from 'react-modal';
 
 const customStyles = {
@@ -37,18 +36,19 @@ export default function CreateModal(props){
                 <label htmlFor="description">Description</label>
               </div> 
 
-              <div className="flex items-center" >
+              <div className="flex items-center space-x-4" >
                 <p>Set Priority: </p>
-                <select name="priority" id="priority" className="p-2 m-2.5 bg-transparent border-2 border-gray rounded">
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                </select>
+              
+                <input type="radio" checked={props.prior === "LOW"} onChange={props.onPrior} value="LOW"></input>
+                <p>LOW</p>
+                <input type="radio" checked={props.prior === "HIGH"} onChange={props.onPrior} value="HIGH"></input>
+                <p>HIGH</p>
+
               </div>
 
               <div className="flex items-center">
                 <p>Due Date: </p>
-                <input type="date" id="date" className="p-2 m-2.5 bg-transparent border-2 border-gray rounded" placeholder="dd-mm-yy" />
+                <input type="date" id="date" className="p-2 m-2.5 bg-transparent border-2 border-gray rounded" value={props.date} onChange={props.onDate} placeholder="dd-mm-yy" />
               </div>
 
               <button onClick={props.onCreateTasks}>done</button>
