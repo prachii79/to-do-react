@@ -13,5 +13,4 @@ export interface ModalTask {
   title: string,
   details: string,
   done: boolean,
-  //handleDone: (e: any, id: string) => void,
 }

@@ -35,7 +35,8 @@ export default function App() {
   const [editPrior, setEditPrior] = useState("");
   const [editTitle, setEditTitle] = useState("");
   const [editDetails, setEditDetails] = useState("");
-  const [editDate, setEditDate] = useState("")
+  const [editDate, setEditDate] = useState("");
+  const [editID, setID] = useState("");
 
   React.useEffect(() => {
     localStorage.setItem("data", JSON.stringify(tasks));
@@ -45,15 +46,12 @@ export default function App() {
     setTasks((prevTasks: ModalTask[]) => {
       return prevTasks.map((task) => {
         if (task.id === id) {
-          //console.log("task:", task)
           return { ...task, done: !task.done };
         }
         return task;
       });
     });
   }
-
-  //const checked = done ? "/images/checked2.svg" : "/images/unchecked.svg"
 
   function handleCreateTasks() {
     setTasks((prevTasks: ModalTask[]) => {
@@ -71,7 +69,7 @@ export default function App() {
     setTitle("");
     setDetails("");
 
-    if ((prior || title || details) === null) {
+    if ((prior || title || details || date) === null) {
       alert("fill the necessary fields");
     } else {
       closeModal();
@@ -95,7 +93,8 @@ export default function App() {
               prior: editPrior,
               title: editTitle,
               details: editDetails,
-              date: editDate
+              date: editDate,
+              id: editID,
             }
           : task
       );
@@ -115,13 +114,14 @@ export default function App() {
       setEditPrior(editable.prior);
       setEditTitle(editable.title);
       setEditDetails(editable.details);
-      setEditDate(editable.date)
+      setEditDate(editable.date);
+      setID(editable.id);
     }
 
     //return editable
   }
 
-  const taskToEdit = tasks.find((task: ModalTask) => task.title === editTitle);
+  const taskToEdit = tasks.find((task: ModalTask) => task.id === editID);
 
   const modalTasks = tasks.map((taask: ModalTask) => {
     return (
@@ -142,7 +142,7 @@ export default function App() {
 
   let today = new Date();
   let dd = String(today.getDate()).padStart(2, "0");
-  let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  let mm = String(today.getMonth() + 1).padStart(2, "0");
   let yyyy = today.getFullYear();
   let d = today.getDay();
   const months = [
@@ -200,18 +200,18 @@ export default function App() {
         onOpen={openModal}
         onClose={closeModal}
         prior={prior}
-        onPrior={(e) => {
+        handlePrior={(e) => {
           setPrior(e.target.value);
         }}
         title={title}
         details={details}
-        onTitle={(e) => {
+        handleTitle={(e) => {
           setTitle(e.target.value);
         }}
-        onDetail={(e) => {
+        handleDetail={(e) => {
           setDetails(e.target.value);
         }}
-        onDate={(e) => {
+        handleDate={(e) => {
           setDate(e.target.value);
         }}
         onCreateTasks={handleCreateTasks}
@@ -225,12 +225,22 @@ export default function App() {
           onOpen={openEditModal}
           onClose={closeEditModal}
           prior={editPrior}
-          onPrior={(e) => {setEditPrior(e.target.value)}}
+          handlePrior={(e) => {
+            setEditPrior(e.target.value);
+          }}
           title={editTitle}
           details={editDetails}
-          onTitle={(e) => {setEditTitle(e.target.value)}}
-          onDetail={(e) => {setEditDetails(e.target.value)}}
-          onEditTask={handleEdit}
+          date={editDate}
+          handleTitle={(e) => {
+            setEditTitle(e.target.value);
+          }}
+          handleDetail={(e) => {
+            setEditDetails(e.target.value);
+          }}
+          handleDate={(e) => {
+            setEditDate(e.target.value);
+          }}
+          onEditDone={handleEdit}
         />
       )}
 
