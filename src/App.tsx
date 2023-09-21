@@ -28,7 +28,8 @@ export default function App() {
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const [tasks, setTasks] = useState(() => {
-    const storedTask = JSON.parse(localStorage.getItem("data"));
+    const storedTaskJSON = localStorage.getItem("data");
+    const storedTask = storedTaskJSON ? JSON.parse(storedTaskJSON) : [];
     return storedTask || [];
   });
 
@@ -77,7 +78,7 @@ export default function App() {
     closeModal();
   }
 
-  function deleteTask(id: string, e) {
+  function deleteTask(id: string, e:any) {
     e.stopPropagation();
     setTasks((prevTasks: ModalTask[]) => {
       return prevTasks.filter((task) => task.id != id);
@@ -106,7 +107,7 @@ export default function App() {
     closeEditModal();
   }
 
-  function editTask(id: string, e) {
+  function editTask(id: string, e:any) {
     e.stopPropagation();
     setEditIsOpen(true);
     const editable = tasks.find((taask: ModalTask) => taask.id === id);
@@ -168,7 +169,7 @@ export default function App() {
     "Saturday",
     "Sunday",
   ];
-  const day = days[parseInt(d) - 1];
+  const day = days[d - 1];
   return (
     <div className="flex justify-center mx-2 sm:mx-16 md:mx-20 lg:mx-44 xl:mx-60">
       <div className="w-full border-2 rounded-md flex flex-col items-center justify-center mt-10 p-3 sm:p-4 md:p-6">
@@ -204,18 +205,19 @@ export default function App() {
           onOpen={openModal}
           onClose={closeModal}
           prior={prior}
-          handlePrior={(e) => {
+          handlePrior={(e: any) => {
             setPrior(e.target.value);
           }}
+          date={date}
           title={title}
           details={details}
-          handleTitle={(e) => {
+          handleTitle={(e: any) => {
             setTitle(e.target.value);
           }}
-          handleDetail={(e) => {
+          handleDetail={(e: any) => {
             setDetails(e.target.value);
           }}
-          handleDate={(e) => {
+          handleDate={(e: any) => {
             setDate(e.target.value);
           }}
           onCreateTasks={handleCreateTasks}
@@ -229,19 +231,19 @@ export default function App() {
             onOpen={openEditModal}
             onClose={closeEditModal}
             prior={editPrior}
-            handlePrior={(e) => {
+            handlePrior={(e: any) => {
               setEditPrior(e.target.value);
             }}
             title={editTitle}
             details={editDetails}
             date={editDate}
-            handleTitle={(e) => {
+            handleTitle={(e: any) => {
               setEditTitle(e.target.value);
             }}
-            handleDetail={(e) => {
+            handleDetail={(e: any) => {
               setEditDetails(e.target.value);
             }}
-            handleDate={(e) => {
+            handleDate={(e: any) => {
               setEditDate(e.target.value);
             }}
             onEditDone={handleEdit}

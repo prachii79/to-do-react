@@ -1,8 +1,9 @@
+import { Dispatch, SetStateAction } from "react";
 import Modal from "react-modal";
 
 Modal.setAppElement("#root");
 
-export default function CreateModal(props) {
+export default function CreateModal(props: {open: boolean, setOpen: Dispatch<SetStateAction<boolean>>,onOpen: () => void, onClose: () => void, prior: string,date: string, title: string, details: string, handlePrior: (e:any)=> void, handleTitle: (e:any) => void, handleDetail: (e:any) => void, handleDate: (e:any) => void, onCreateTasks: () => void }) {
   return (
     <Modal
       isOpen={props.open}
