@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { ModalTask } from "./interfaces";
 import CreateModal from "./components/CreateModal";
 import EditModal from "./components/EditModal";
-import NewTask from "./components/NewTask";
+import Task from "./components/Task";
 import { Accordion } from "react-accessible-accordion";
 
 export default function App() {
@@ -54,6 +54,11 @@ export default function App() {
   }
 
   function handleCreateTasks() {
+    if (!prior || !title || !details || !date) {
+      alert("Please fill in all the necessary fields.");
+      return;
+    }
+
     setTasks((prevTasks: ModalTask[]) => {
       const task: ModalTask = {
         id: nanoid(),
@@ -69,11 +74,7 @@ export default function App() {
     setTitle("");
     setDetails("");
 
-    if ((prior || title || details || date) === null) {
-      alert("fill the necessary fields");
-    } else {
-      closeModal();
-    }
+    closeModal();
   }
 
   function deleteTask(id: string, e) {
@@ -117,15 +118,13 @@ export default function App() {
       setEditDate(editable.date);
       setID(editable.id);
     }
-
-    //return editable
   }
 
   const taskToEdit = tasks.find((task: ModalTask) => task.id === editID);
 
   const modalTasks = tasks.map((taask: ModalTask) => {
     return (
-      <NewTask
+      <Task
         key={taask.id}
         id={taask.id}
         priority={taask.prior}
@@ -171,80 +170,88 @@ export default function App() {
   ];
   const day = days[parseInt(d) - 1];
   return (
-    <div className="w-5/12 border-2 rounded-md flex flex-col items-center justify-center mx-auto p-3">
-      <header className="flex justify-between w-full h-22 border-b-2 border-dotted pb-2">
-        <div className="flex items-center">
-          <div className="text-4xl font-bold">{dd}</div>
-          <div className="ml-2">
-            <p className="text-md font-semibold">
-              {month} {yyyy}
-            </p>
-            <p className="text-sm">{day}</p>
+    <div className="flex justify-center mx-2 sm:mx-16 md:mx-20 lg:mx-44 xl:mx-60">
+      <div className="w-full border-2 rounded-md flex flex-col items-center justify-center mt-10 p-3 sm:p-4 md:p-6">
+        <header className="flex justify-between w-full h-22 border-b-2 border-slate-500 pb-2">
+          <div className="flex items-center">
+            <div className="text-xl font-bold sm:text-3xl md:text-4xl lg:text-5xl">
+              {dd}
+            </div>
+            <div className="ml-1">
+              <p className="text-xs font-medium sm:text-sm sm:font-semibold md:text-md lg:text-lg">
+                {month} {yyyy}
+              </p>
+              <p className="text-xs sm:text-sm md:text-md lg:text-lg">{day}</p>
+            </div>
           </div>
-        </div>
 
-        <div className="flex items-center">
-          <img
-            src="./images/create.svg"
-            alt=""
-            className="h-9 w-9"
-            onClick={openModal}
-          />
-          <p className="font-bold text-xs">CREATE TASK</p>
-        </div>
-      </header>
+          <div className="flex items-center">
+            <img
+              src="./images/create.svg"
+              alt=""
+              className="h-5 w-5 sm:h-8 sm:w-8"
+              onClick={openModal}
+            />
+            <p className="font-semibold text-xs ml-1 sm:font-bold sm:text-sm">
+              CREATE TASK
+            </p>
+          </div>
+        </header>
 
-      <CreateModal
-        open={modalIsOpen}
-        setOpen={setIsOpen}
-        onOpen={openModal}
-        onClose={closeModal}
-        prior={prior}
-        handlePrior={(e) => {
-          setPrior(e.target.value);
-        }}
-        title={title}
-        details={details}
-        handleTitle={(e) => {
-          setTitle(e.target.value);
-        }}
-        handleDetail={(e) => {
-          setDetails(e.target.value);
-        }}
-        handleDate={(e) => {
-          setDate(e.target.value);
-        }}
-        onCreateTasks={handleCreateTasks}
-      />
-
-      {editModalIsOpen && (
-        <EditModal
-          id={taskToEdit.id}
-          open={editModalIsOpen}
-          setOpen={setEditIsOpen}
-          onOpen={openEditModal}
-          onClose={closeEditModal}
-          prior={editPrior}
+        <CreateModal
+          open={modalIsOpen}
+          setOpen={setIsOpen}
+          onOpen={openModal}
+          onClose={closeModal}
+          prior={prior}
           handlePrior={(e) => {
-            setEditPrior(e.target.value);
+            setPrior(e.target.value);
           }}
-          title={editTitle}
-          details={editDetails}
-          date={editDate}
+          title={title}
+          details={details}
           handleTitle={(e) => {
-            setEditTitle(e.target.value);
+            setTitle(e.target.value);
           }}
           handleDetail={(e) => {
-            setEditDetails(e.target.value);
+            setDetails(e.target.value);
           }}
           handleDate={(e) => {
-            setEditDate(e.target.value);
+            setDate(e.target.value);
           }}
-          onEditDone={handleEdit}
+          onCreateTasks={handleCreateTasks}
         />
-      )}
 
-      <Accordion allowZeroExpanded>{modalTasks}</Accordion>
+        {editModalIsOpen && (
+          <EditModal
+            id={taskToEdit.id}
+            open={editModalIsOpen}
+            setOpen={setEditIsOpen}
+            onOpen={openEditModal}
+            onClose={closeEditModal}
+            prior={editPrior}
+            handlePrior={(e) => {
+              setEditPrior(e.target.value);
+            }}
+            title={editTitle}
+            details={editDetails}
+            date={editDate}
+            handleTitle={(e) => {
+              setEditTitle(e.target.value);
+            }}
+            handleDetail={(e) => {
+              setEditDetails(e.target.value);
+            }}
+            handleDate={(e) => {
+              setEditDate(e.target.value);
+            }}
+            onEditDone={handleEdit}
+          />
+        )}
+
+        <div className="w-full mt-5">
+          <Accordion allowZeroExpanded>{modalTasks}</Accordion>
+        </div>
+      </div>
     </div>
   );
 }
