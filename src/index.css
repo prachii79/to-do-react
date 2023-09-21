@@ -18,8 +18,7 @@
   left: 5px;
   transform: translateY(-50%);
   font-size: 16px;
-  /* color: black; */
-  color: #7ab77a;
+  color: black;
   padding: 0 5px;
   transition: top 0.5s, font-size 0.5s, background-color 0.5s, font-weight 0.5s;
   pointer-events: none;
@@ -27,13 +26,13 @@
 
 .input-group input,
 .input-group textarea {
-  width: 320px;
+  width: 330px;
   height: 40px;
   font-size: 16px;
   color: black;
   padding: 10px;
   background: transparent;
-  border: 2px solid rgb(226, 223, 223);
+  border: 1px solid #e2dfdf;
   border-radius: 5px;
 }
 
@@ -49,4 +48,16 @@
   font-size: 14px;
   background-color: #f8fdfeee;
   font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .input-group input,
+  .input-group textarea {
+    width: 190px;
+    height: 40px;
+  }
+
+  .input-group textarea{
+    height:90px
+  }
 }

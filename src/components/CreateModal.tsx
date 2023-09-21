@@ -1,17 +1,5 @@
 import Modal from "react-modal";
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    background: "#f8fdfeee",
-  },
-};
-
 Modal.setAppElement("#root");
 
 export default function CreateModal(props) {
@@ -19,12 +7,12 @@ export default function CreateModal(props) {
     <Modal
       isOpen={props.open}
       onRequestClose={props.onClose}
-      style={customStyles}
+      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ease-in-out duration-300 w-60 sm:w-96 p-2 h-auto bg-[#f8fdfeee]"
     >
       <div className="flex flex-col">
         <div
           onClick={props.onClose}
-          className="text-right font-semibold cursor-pointer text-xl "
+          className="text-right font-semibold cursor-pointer text-xl mr-2 "
         >
           x
         </div>
@@ -37,6 +25,7 @@ export default function CreateModal(props) {
               id="title"
               value={props.title}
               onChange={props.handleTitle}
+              className="outline-2 outline-black"
               required
             />
             <label htmlFor="title">Title</label>
@@ -47,12 +36,13 @@ export default function CreateModal(props) {
               id="description"
               value={props.details}
               onChange={props.handleDetail}
+              className="outline-2 outline-black"
               required
             ></textarea>
             <label htmlFor="description">Description</label>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             <p>Set Priority: </p>
 
             <input
@@ -61,14 +51,14 @@ export default function CreateModal(props) {
               onChange={props.handlePrior}
               value="LOW"
             ></input>
-            <p>LOW</p>
+            <p className="text-sm md:text-lg">LOW</p>
             <input
               type="radio"
               checked={props.prior === "HIGH"}
               onChange={props.handlePrior}
               value="HIGH"
             ></input>
-            <p>HIGH</p>
+            <p className="text-sm md:text-lg">HIGH</p>
           </div>
 
           <div className="flex items-center">
@@ -76,14 +66,14 @@ export default function CreateModal(props) {
             <input
               type="date"
               id="date"
-              className="p-2 m-2.5 bg-transparent border-2 border-gray rounded"
+              className="p-2 m-2.5 bg-transparent border-2 outline-2 outline-black rounded"
               value={props.date}
               onChange={props.handleDate}
               placeholder="dd-mm-yy"
             />
           </div>
 
-          <button onClick={props.onCreateTasks}>done</button>
+          <button onClick={props.onCreateTasks} className="bg-green-600 text-white mx-16 md:mx-24 my-4 p-2 rounded">DONE</button>
         </div>
       </div>
     </Modal>

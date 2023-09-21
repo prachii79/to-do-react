@@ -6,15 +6,7 @@ import {
 } from "react-accessible-accordion";
 
 export default function Task({
-  id,
-  priority,
-  tit,
-  det,
-  delet,
-  edit,
-  date,
-  done,
-  handle,
+  id, priority, tit, det, delet, edit, date, done, handle,
 }) {
   const styles = {
     backgroundColor: done
