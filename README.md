@@ -37,7 +37,7 @@
     <h3 id="installation">Installation</h3>
     <ol>
         <li>Clone the repository:
-            <pre><code>git clone https://github.com/yourusername/react-todo-app.git</code></pre>
+            <pre><code>git clone https://github.com/prachii79/to-do-react.git</code></pre>
         </li>
         <li>Navigate to the project directory:
             <pre><code>cd react-todo-app</code></pre>
